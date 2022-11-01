@@ -21,11 +21,12 @@ async def get():
 
 @app.websocket("/ws")
 async def ws(websocket: WebSocket):
-    ws.accept()
+    await websocket.accept()
     while True:
         try:
-            data = await websocket.receive_json()
+            data = await websocket.receive_text()
             print(data)
-            await websocket.send_json(data)
+            await websocket.send_text(data)
         except WebSocketDisconnect:
             print("\nDisconected\n")
+            break
