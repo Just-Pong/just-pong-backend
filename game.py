@@ -34,7 +34,12 @@ class Game:
         })
 
     def upgrade_state(self, ws: WebSocket, data):
-        pass
+        if ws == self.player_1_ws:
+            self.player_1_ws = None
+            self.player_1_pos = data['position']
+        elif ws == self.player_2_ws:
+            self.player_2_ws = None
+            self.player_2_pos = data['position']
 
     async def disconnect(self, ws: WebSocket):
         if ws == self.player_1_ws:
@@ -44,4 +49,6 @@ class Game:
             self.player_2_ws = None
             await self.host_ws.send_text("PLayer 2 disconnected")
         else:
-            pass
+            self.host_ws = None
+            await self.player_1_ws.send_text("Host disconnected")
+            await self.player_2_ws.send_text("Host disconnected")
