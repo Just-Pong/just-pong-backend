@@ -14,12 +14,10 @@ class Game:
         self.player_1_pos = 0
         self.player_2_pos = 0
 
-    async def connect_host(self, ws: WebSocket):
-        await ws.accept()
+    def connect_host(self, ws: WebSocket):
         self.host_ws = ws
 
-    async def connect_player(self, ws: WebSocket):
-        await ws.accept()
+    def connect_player(self, ws: WebSocket):
         if self.player_1_ws is None:
             self.player_1_ws = ws
         elif self.player_2_ws is None:
@@ -33,7 +31,7 @@ class Game:
             "player_2": self.player_2_pos,
         })
 
-    def upgrade_state(self, ws: WebSocket, data):
+    def update_state(self, ws: WebSocket, data):
         if ws == self.player_1_ws:
             self.player_1_ws = None
             self.player_1_pos = data['position']
@@ -42,6 +40,7 @@ class Game:
             self.player_2_pos = data['position']
 
     async def disconnect(self, ws: WebSocket):
+        # TODO add None check before sending
         if ws == self.player_1_ws:
             self.player_1_ws = None
             await self.host_ws.send_text("PLayer 1 disconnected")
