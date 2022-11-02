@@ -16,7 +16,7 @@ class Game:
 
     async def connect_host(self, ws: WebSocket):
         await ws.accept()
-        host = ws
+        self.host_ws = ws
 
     async def connect_player(self, ws: WebSocket):
         await ws.accept()
