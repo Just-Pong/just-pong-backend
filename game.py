@@ -18,6 +18,7 @@ class Game:
         self.host_ws = ws
 
     def connect_player(self, ws: WebSocket):
+        
         if self.player_1_ws is None:
             self.player_1_ws = ws
         elif self.player_2_ws is None:
@@ -32,11 +33,10 @@ class Game:
         })
 
     def update_state(self, ws: WebSocket, data):
+        print(data)
         if ws == self.player_1_ws:
-            self.player_1_ws = None
             self.player_1_pos = data['position']
         elif ws == self.player_2_ws:
-            self.player_2_ws = None
             self.player_2_pos = data['position']
 
     async def disconnect(self, ws: WebSocket):

@@ -1,42 +1,43 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+import json
+
 from game_manager import GameManager
 
 router = APIRouter()
 gameManager = GameManager()
 
-# TODO trace and fix receive call after Disconnect
+
 @router.websocket("/game/host/ws")
 async def host(ws: WebSocket):
     await ws.accept()
-    id = gameManager.new()
-    gameManager.get(id).connect_host(ws)
+    game_id = gameManager.new()
+    gameManager.get(game_id).connect_host(ws)
     await ws.send_json({
-        "game_id": id
+        "game_id": game_id
     })
     while True:
-        try:
-            await ws.receive()
-        except WebSocketDisconnect:
-            await gameManager.get(id).disconnect(ws)
-            gameManager.remove(id)
-            break
+        res = await ws.receive()
+        if res['type'] == 'websocket.disconnect':
+            await gameManager.get(game_id).disconnect(ws)
+            gameManager.remove(game_id)
+            return
 
 
 @router.websocket("/game/{game_id}/ws")
 async def player(ws: WebSocket, game_id: str):
     await ws.accept()
-    if not gameManager.validId(game_id):
+    if gameManager.validId(game_id) == False:
         await ws.close(reason="Game doesn't exit")
         return
 
-    gameManager.get(id).connect_player(ws)
+    gameManager.get(game_id).connect_player(ws)
 
     while True:
-        try:
-            data = await ws.receive_json()
-            gameManager.get(game_id).update_state(ws, data)
+        res = await ws.receive()
+        if res['type'] == 'websocket.receive':
+            gameManager.get(game_id).update_state(ws, json.loads(res['text']))
             await gameManager.get(game_id).send_state()
-        except WebSocketDisconnect:
-            await gameManager.get(id).disconnect(ws)
-            break
-
+        if res['type'] == 'websocket.disconnect':
+            await gameManager.get(game_id).disconnect(ws)
+            gameManager.remove(game_id)
+            return
