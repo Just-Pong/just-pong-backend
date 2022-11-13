@@ -27,7 +27,7 @@ async def host(ws: WebSocket):
 async def player(ws: WebSocket, game_id: str):
     await ws.accept()
     if gameManager.validId(game_id) == False:
-        await ws.close(reason="Game doesn't exit")
+        await ws.close(1003, "Game doesn't exit")
         return
 
     gameManager.get(game_id).connect_player(ws)
@@ -39,5 +39,5 @@ async def player(ws: WebSocket, game_id: str):
             await gameManager.get(game_id).send_state()
         if res['type'] == 'websocket.disconnect':
             await gameManager.get(game_id).disconnect(ws)
-            gameManager.remove(game_id)
+            await gameManager.get(game_id).send_state()
             return

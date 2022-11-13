@@ -1,10 +1,8 @@
-### <span style="color:red">Still under development, hasn't been tested</span>
-
 # Website side
 Connect at:  
-`ws://\<ip>:\<port>/game/host/ws`
+`ws://<ip>:<port>/game/host/ws`
 
-The server sendk a json with the game id (string), similar to this
+The server sends a json with the game id (string), similar to this
 ```json
 {
 	"game_id": "WRgKf82h"
@@ -12,7 +10,8 @@ The server sendk a json with the game id (string), similar to this
 ```
 
 Position updates  
-Possible position range TBD range
+Possible position range TBD  
+If a player is not connected the position will `-1`
 ```json
 {
     "player_1": 0.0,
@@ -23,14 +22,16 @@ Possible position range TBD range
 # Phone side
 
 Connect at:  
-`ws://\<ip>:\<port>/game/\<game id>/ws`
+`ws://<ip>:<port>/game/<game id>/ws`
 
-If invalid game id is given (meaning no game such game exists) the server will close the connection
+If invalid game id is given (meaning no game such game exists) the server will close the connection with the code being `1003`
 
-Send psoition as:
+If the host disconnects the player webosckets will be closed with the code being `1001`
+
+### Send position as:
 ```json
 {
-    "possition": 0.0
+    "position": 0.0
 }
 ```
 
