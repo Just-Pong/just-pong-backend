@@ -1,5 +1,6 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from routes import router
 
 app = FastAPI()
 
@@ -19,14 +20,4 @@ async def get():
     return {"Hello ": "world"}
 
 
-@app.websocket("/ws")
-async def ws(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        try:
-            data = await websocket.receive_text()
-            print(data)
-            await websocket.send_text(data)
-        except WebSocketDisconnect:
-            print("\nDisconected\n")
-            break
+app.include_router(router)
