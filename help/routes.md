@@ -24,7 +24,7 @@ If a player is not connected the position will `-1`
 Connect at:  
 `ws://<ip>:<port>/dev/host/ws`
 
-Sends random positions between `0-1000`.  
+Sends random positions between `0-100`.  
 Does not simluate disconnected player.
 
 # Phone side
