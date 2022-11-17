@@ -1,6 +1,7 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from routes import router
+from mock_data import mock_router
 
 app = FastAPI()
 
@@ -21,3 +22,5 @@ async def get():
 
 
 app.include_router(router)
+
+app.include_router(mock_router)
