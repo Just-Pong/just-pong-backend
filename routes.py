@@ -11,10 +11,10 @@ gameManager = GameManager()
 async def host(ws: WebSocket):
     await ws.accept()
     game_id = gameManager.new()
-    gameManager.get(game_id).connect_host(ws)
-    await ws.send_json({
-        "game_id": game_id
-    })
+    gameManager.get(game_id).connect_host(ws, game_id)
+
+    await gameManager.get(game_id).send_state()
+
     while True:
         res = await ws.receive()
         if res['type'] == 'websocket.disconnect':
