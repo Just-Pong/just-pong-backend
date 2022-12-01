@@ -2,18 +2,12 @@
 Connect at:  
 `ws://<ip>:<port>/game/host/ws`
 
-The server sends a json with the game id (string), similar to this
-```json
-{
-	"game_id": "WRgKf82h"
-}
-```
-
-Position updates  
-Possible position range TBD  
+Position updates also include the game id  
+Possible position range 0-100  
 If a player is not connected the position will `-1`
 ```json
 {
+    "game_id": "zRJxriL5",
     "player_1": 0.0,
     "player_2": 0.0
 }
@@ -25,7 +19,7 @@ Connect at:
 `ws://<ip>:<port>/dev/host/ws`
 
 Sends random positions between `0-100`.  
-Does not simluate disconnected player.
+Does not simulate disconnected player.
 
 # Phone side
 

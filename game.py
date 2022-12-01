@@ -5,6 +5,7 @@ class Game:
     host_ws: WebSocket
     player_1_ws: WebSocket
     player_2_ws: WebSocket
+    game_id: str
 
     def __init__(self) -> None:
         self.host_ws = None
@@ -14,8 +15,9 @@ class Game:
         self.player_1_pos = -1
         self.player_2_pos = -1
 
-    def connect_host(self, ws: WebSocket):
+    def connect_host(self, ws: WebSocket, game_id: str):
         self.host_ws = ws
+        self.game_id = game_id
 
     def end(self):
         if self.player_1_ws is not None:
@@ -36,6 +38,7 @@ class Game:
     async def send_state(self):
         if self.host_ws is not None:
             await self.host_ws.send_json({
+                "game_id": self.game_id,
                 "player_1": self.player_1_pos,
                 "player_2": self.player_2_pos,
             })

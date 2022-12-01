@@ -9,10 +9,6 @@ async def host(ws: WebSocket):
     await ws.accept()
 
     host_ws = ws
-    
-    await ws.send_json({
-        "game_id": "aaaaaaaa"
-    })
 
     player_1_pos = 50
     player_2_pos = 50
@@ -27,6 +23,7 @@ async def host(ws: WebSocket):
 
             if host_ws is not None:
                 await host_ws.send_json({
+                    "game_id": "aaaaaaaa",
                     "player_1": player_1_pos,
                     "player_2": player_2_pos,
                 })
